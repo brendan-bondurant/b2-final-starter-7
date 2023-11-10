@@ -43,7 +43,7 @@ RSpec.describe "merchant dashboard" do
 
     @bulkdiscount1 = @merchant1.bulk_discounts.create!(percentage: 0.10, quantity: 10)
     @bulkdiscount2 = @merchant1.bulk_discounts.create!(percentage: 0.30, quantity: 20)
-    @bulkdiscount1 = @merchant2.bulk_discounts.create!(percentage: 0.20, quantity: 15)
+    @bulkdiscount3 = @merchant2.bulk_discounts.create!(percentage: 0.15, quantity: 15)
 
     visit merchant_dashboard_index_path(@merchant1)
   end
@@ -134,12 +134,13 @@ expect(page).to have_link("View Discounts")
 click_link "View Discounts"
 # Then I am taken to my bulk discounts index page
 expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts")
+save_and_open_page
 # Where I see all of my bulk discounts including their
-expect(page).to have_content(@bulkdiscount1.percentage)
+expect(page).to have_content(@bulkdiscount1.percentage_off)
 expect(page).to have_content(@bulkdiscount1.quantity)
-expect(page).to have_content(@bulkdiscount2.percentage)
+expect(page).to have_content(@bulkdiscount2.percentage_off)
 expect(page).to have_content(@bulkdiscount2.quantity)
-expect(page).to_not have_content(@bulkdiscount3.percentage)
+expect(page).to_not have_content(@bulkdiscount3.percentage_off)
 expect(page).to_not have_content(@bulkdiscount3.quantity)
 # percentage discount and quantity thresholds
 # And each bulk discount listed includes a link to its show page
