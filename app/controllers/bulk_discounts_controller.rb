@@ -21,7 +21,7 @@ class BulkDiscountsController < ApplicationController
   def update
     discount = BulkDiscount.find(params[:id])
     #figure out stronger way to do this later
-    discount.update(percentage: params[:percentage], quantity: params[:quantity])
+    discount.update(bulk_discount_params)
 
     redirect_to merchant_bulk_discounts_path(@merchant.id)
     

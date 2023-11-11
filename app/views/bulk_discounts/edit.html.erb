@@ -1,4 +1,4 @@
-<%= form_with url: merchant_bulk_discount_path(@merchant, @discount), method: :patch, local: true do |form| %>
+<%=  form_with model: [@merchant, @discount], data: {turbo: false} do |form| %>
     <p><%= form.label "Percent Discount" %>
   <%= form.text_field :percentage, value: @discount.percentage %></p>
   <p><%= form.label "Quantity Needed" %>
