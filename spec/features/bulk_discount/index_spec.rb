@@ -67,14 +67,15 @@ RSpec.describe "bulk discount index" do
 
   describe 'destroy#discount' do
     it 'lets you destroy an existing discount' do
-      save_and_open_page
-      expect(page).to have_button("delete #{@bulkdiscount1.percentage_off} of #{@bulkdiscount1.quantity}")
-      expect(page).to have_button("delete #{@bulkdiscount2.percentage_off} of #{@bulkdiscount2.quantity}")
-      click_button "delete #{@bulkdiscount1.percentage_off} of #{@bulkdiscount1.quantity}"
+
+      expect(page).to have_button("Delete #{@bulkdiscount1.percentage_off}% off #{@bulkdiscount1.quantity}")
+      expect(page).to have_button("Delete #{@bulkdiscount2.percentage_off}% off #{@bulkdiscount2.quantity}")
+      
+      click_button "Delete #{@bulkdiscount1.percentage_off}% off #{@bulkdiscount1.quantity}"
       expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1.id))
+      
       expect(page).to_not have_content(@bulkdiscount1.percentage_off)
       expect(page).to_not have_content(@bulkdiscount1.quantity)
-
     end
   
   end
