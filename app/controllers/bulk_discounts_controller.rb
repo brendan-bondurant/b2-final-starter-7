@@ -30,6 +30,7 @@ class BulkDiscountsController < ApplicationController
   def create
     BulkDiscount.create!(bulk_discount_params.merge(merchant_id: params[:merchant_id])) 
   
+    redirect_to merchant_bulk_discounts_path(@merchant.id)
   end
 
   def destroy

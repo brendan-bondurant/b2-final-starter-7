@@ -70,14 +70,14 @@ RSpec.describe "bulk discount show" do
       expect(page).to have_link("Change Discount")
       click_link "Change Discount"
       expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant1, @bulkdiscount1))
+      
       expect(find_field("bulk_discount[percentage]").value).to have_content(@bulkdiscount1.percentage)
       expect(find_field("bulk_discount[quantity]").value).to have_content(@bulkdiscount1.quantity)
-
       fill_in "bulk_discount[percentage]", with: 0.39
       fill_in "bulk_discount[quantity]", with: 29
       click_button "Update"
       expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1))
-      save_and_open_page
+      
       expect(page).to have_content("39%")
       expect(page).to have_content(29)
     end
