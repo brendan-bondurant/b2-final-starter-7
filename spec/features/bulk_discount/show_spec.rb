@@ -52,10 +52,15 @@ RSpec.describe "bulk discount show" do
   describe 'merchant#show' do
     it 'shows the quantity and percentage off' do
       visit merchant_bulk_discount_path(@merchant1, @bulkdiscount2)
-
+      
       expect(page).to have_content(@bulkdiscount2.percentage_off)
       expect(page).to have_content(@bulkdiscount2.quantity)
-    
+    end
+    it 'shows the quantity and percentage off test2' do
+      visit merchant_bulk_discount_path(@merchant2, @bulkdiscount3)
+
+      expect(page).to have_content(@bulkdiscount3.percentage_off)
+      expect(page).to have_content(@bulkdiscount3.quantity)
     end
   
   end
