@@ -1,5 +1,5 @@
 class BulkDiscountsController < ApplicationController
-  before_action :find_merchant, only: [:new, :create, :index, :destroy, :show, :edit]
+  before_action :find_merchant, only: [:new, :create, :index, :destroy, :show, :edit, :update]
   
   def index
     @discounts = @merchant.bulk_discounts
@@ -18,12 +18,18 @@ class BulkDiscountsController < ApplicationController
 
   end
 
+  def update
+    discount = BulkDiscount.find(params[:id])
+    #figure out stronger way to do this later
+    discount.update(percentage: params[:percentage], quantity: params[:quantity])
 
+    redirect_to merchant_bulk_discounts_path(@merchant.id)
+    
+  end
 
   def create
     BulkDiscount.create!(bulk_discount_params.merge(merchant_id: params[:merchant_id])) 
   
-    redirect_to merchant_bulk_discounts_path(@merchant.id)
   end
 
   def destroy
