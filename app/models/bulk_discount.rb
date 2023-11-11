@@ -7,4 +7,9 @@ class BulkDiscount < ApplicationRecord
   def percentage_off
     percentage = (self.percentage * 100).to_i
   end
+
+  def self.merchant_identifier
+    id = self.distinct.pluck(:merchant_id)
+  end
+
 end

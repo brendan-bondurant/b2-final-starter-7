@@ -56,10 +56,18 @@ RSpec.describe "bulk discount index" do
     #   When I click this link
       click_link("New Discount")
     #   Then I am taken to a new page where I see a form to add a new bulk discount
-      expect(current_path).to eq(new_merchant_bulk_discount_path)
+      expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant1.id))
+
     #   When I fill in the form with valid data
+      fill_in "bulk_discount[percentage]", with: 0.50
+      fill_in "bulk_discount[quantity]", with: 80
+      click_button "Submit"
     #   Then I am redirected back to the bulk discount index
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1.id))
     #   And I see my new bulk discount listed
+    
+      expect(page).to have_content("50%")
+      expect(page).to have_content(80)
     end
     
   end

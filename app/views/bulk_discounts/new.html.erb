@@ -1,0 +1,10 @@
+<h2>Add Discount</h2>
+
+
+<%= form_with model: [@merchant, BulkDiscount.new], data: {turbo: false} do |form| %>
+  <p><%= form.label "Percent Discount" %>
+  <%= form.text_field :percentage %></p>
+  <p><%= form.label "Quantity Needed" %>
+  <%= form.text_field :quantity %></p>
+  <%= form.submit "Submit" %>
+  <% end %>
