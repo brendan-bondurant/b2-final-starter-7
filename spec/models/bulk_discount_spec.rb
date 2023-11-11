@@ -24,6 +24,5 @@ describe BulkDiscount do
       expect(@bulkdiscount2.percentage_off).to eq(30)
       expect(@bulkdiscount3.percentage_off).to eq(15)
     end
-  
   end
 end

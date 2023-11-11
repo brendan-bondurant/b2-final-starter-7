@@ -5,4 +5,4 @@
     when you purchase <%= discount.quantity %> items!</p>
     <% end %>
 
-<h4><%=link_to "New Discount", new_merchant_bulk_discount_path(@discounts.merchant_identifier) %></h4>
+<h4><%=link_to "New Discount", new_merchant_bulk_discount_path(@merchant.id) %></h4>
