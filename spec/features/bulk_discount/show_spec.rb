@@ -50,12 +50,14 @@ RSpec.describe "bulk discount show" do
   end
 
   describe 'merchant#show' do
+    
     it 'shows the quantity and percentage off' do
       visit merchant_bulk_discount_path(@merchant1, @bulkdiscount2)
       
       expect(page).to have_content(@bulkdiscount2.percentage_off)
       expect(page).to have_content(@bulkdiscount2.quantity)
     end
+    
     it 'shows the quantity and percentage off test2' do
       visit merchant_bulk_discount_path(@merchant2, @bulkdiscount3)
 
@@ -63,6 +65,21 @@ RSpec.describe "bulk discount show" do
       expect(page).to have_content(@bulkdiscount3.quantity)
     end
   
+    it 'allows the discount to be edited' do
+  #       As a merchant
+  #       When I visit my bulk discount show page
+      visit merchant_bulk_discount_path(@merchant1, @bulkdiscount1)
+  #       Then I see a link to edit the bulk discount
+      expect(page).to have_link("Change Discount")
+  #       When I click this link
+      click_link "Change Discount"
+  #       Then I am taken to a new page with a form to edit the discount
+      expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant1, @bulkdiscount1))
+  #       And I see that the discounts current attributes are pre-poluated in the form
+  #       When I change any/all of the information and click submit
+  #       Then I am redirected to the bulk discount's show page
+  #       And I see that the discount's attributes have been updated
+    end
   end
 
 
