@@ -134,7 +134,6 @@ expect(page).to have_link("View Discounts")
 click_link "View Discounts"
 # Then I am taken to my bulk discounts index page
 expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts")
-save_and_open_page
 # Where I see all of my bulk discounts including their
 expect(page).to have_content(@bulkdiscount1.percentage_off)
 expect(page).to have_content(@bulkdiscount1.quantity)
@@ -143,6 +142,10 @@ expect(page).to have_content(@bulkdiscount2.quantity)
 expect(page).to_not have_content(@bulkdiscount3.percentage_off)
 expect(page).to_not have_content(@bulkdiscount3.quantity)
 # percentage discount and quantity thresholds
+expect(page).to have_link("#{@bulkdiscount1.percentage_off}% off")
+expect(page).to have_link("#{@bulkdiscount2.percentage_off}% off")
+click_link ("#{@bulkdiscount2.percentage_off}% off")
+expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts/#{@bulkdiscount2.id}")
 # And each bulk discount listed includes a link to its show page
   end
 end
