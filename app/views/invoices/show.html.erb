@@ -42,6 +42,11 @@
                 <%= f.select :status, Invoice.statuses.keys, selected: "#{@invoice.status}" %>
                 <%= f.submit 'Update Invoice' %>
               <% end %>
+              <% if i.discount != "no discount" %>
+              <%= link_to "discount applied to #{i.item.name}", merchant_bulk_discount_path(@merchant, i.discount) %>
+              <% else %>
+              <%= "no discount available" %>
+              <% end %>
               </td>
           </tr>
         </section>
