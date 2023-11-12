@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "bulk discount index" do
+RSpec.describe "bulk discount show" do
   before :each do
     @merchant1 = Merchant.create!(name: "Hair Care")
     @merchant2 = Merchant.create!(name: "Coffee Stuff")
@@ -46,37 +46,43 @@ RSpec.describe "bulk discount index" do
     @bulkdiscount3 = @merchant2.bulk_discounts.create!(percentage: 0.15, quantity: 15)
 
     
-    visit merchant_bulk_discounts_path(@merchant1)
+
   end
 
-  describe 'create#discount' do
-    it 'lets you create a new discount' do
-      expect(page).to have_link("New Discount")
-      click_link("New Discount")
-      expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant1.id))
-
-      fill_in "bulk_discount[percentage]", with: 0.50
-      fill_in "bulk_discount[quantity]", with: 80
-      click_button "Submit"
-
-      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1.id))
-      expect(page).to have_content("50%")
-      expect(page).to have_content(80)
+  describe 'merchant#show' do
+    
+    it 'shows the quantity and percentage off' do
+      visit merchant_bulk_discount_path(@merchant1, @bulkdiscount2)
+      
+      expect(page).to have_content(@bulkdiscount2.percentage_off)
+      expect(page).to have_content(@bulkdiscount2.quantity)
     end
-  end
+    
+    it 'shows the quantity and percentage off test2' do
+      visit merchant_bulk_discount_path(@merchant2, @bulkdiscount3)
 
-  describe 'destroy#discount' do
-    it 'lets you destroy an existing discount' do
-
-      expect(page).to have_button("Delete #{@bulkdiscount1.percentage_off}% off #{@bulkdiscount1.quantity}")
-      expect(page).to have_button("Delete #{@bulkdiscount2.percentage_off}% off #{@bulkdiscount2.quantity}")
-      
-      click_button "Delete #{@bulkdiscount1.percentage_off}% off #{@bulkdiscount1.quantity}"
-      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1.id))
-      
-      expect(page).to_not have_content(@bulkdiscount1.percentage_off)
-      expect(page).to_not have_content(@bulkdiscount1.quantity)
+      expect(page).to have_content(@bulkdiscount3.percentage_off)
+      expect(page).to have_content(@bulkdiscount3.quantity)
     end
   
+    it 'allows the discount to be edited' do
+      visit merchant_bulk_discount_path(@merchant1, @bulkdiscount1)
+      expect(page).to have_link("Change Discount")
+      click_link "Change Discount"
+      expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant1, @bulkdiscount1))
+      
+      expect(find_field("bulk_discount[percentage]").value).to have_content(@bulkdiscount1.percentage)
+      expect(find_field("bulk_discount[quantity]").value).to have_content(@bulkdiscount1.quantity)
+      fill_in "bulk_discount[percentage]", with: 0.39
+      fill_in "bulk_discount[quantity]", with: 29
+      click_button "Update"
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1))
+      
+      expect(page).to have_content("39%")
+      expect(page).to have_content(29)
+    end
   end
+
+
+
 end

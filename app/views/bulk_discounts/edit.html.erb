@@ -1,0 +1,11 @@
+<%=  form_with model: [@merchant, @discount], data: {turbo: false} do |form| %>
+    <p><%= form.label "Percent Discount" %>
+  <%= form.text_field :percentage %></p>
+  <p><%= form.label "Quantity Needed" %>
+  <%= form.text_field :quantity %></p>
+  <%= form.submit "Update" %>
+  
+  <% end %>
+
+
+  

@@ -1,0 +1,4 @@
+<h2>This discount is for <%= @discount.percentage_off %>%</h2>
+<h3>If the customer purchases at least <%= @discount.quantity %> items</h3>
+
+<%= link_to "Change Discount", edit_merchant_bulk_discount_path(@merchant, @discount) %>
