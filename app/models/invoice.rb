@@ -16,16 +16,39 @@ class Invoice < ApplicationRecord
   end
 
   def discounted_revenue
-    amount_off = 0
-    discounts = bulk_discounts
-    discounts.each do |discount|
-      item = invoice_items.where("quantity > ?", discount.quantity)
-        if item != nil
-        before_discount = item.sum("unit_price * quantity")
-        amount_off += (before_discount * discount.percentage)
+    total_revenue = invoice_items.sum('unit_price * quantity')
+    total_discount = 0
+  
+    invoice_items.each do |invoice_item|
+      max_discount = invoice_item.item.merchant.bulk_discounts
+                                    .where('quantity <= ?', invoice_item.quantity)
+                                    .maximum(:percentage)
+      if max_discount
+        total_discount += max_discount * invoice_item.quantity * invoice_item.unit_price
       end
     end
-    discounted_price = total_revenue - amount_off
-    # require 'pry'; binding.pry
+  
+    (total_revenue - total_discount).round(2)
   end
+
+
+  def discounted_revenue
+    total_revenue = invoice_items.sum('unit_price * quantity')
+    total_discount = invoice_items.joins(item: { merchant: :bulk_discounts })
+                              .group('invoice_items.id')
+                              .sum do |invoice_item_id, _|
+                                invoice_item = invoice_items.find(invoice_item_id.id)
+                                max_percentage = invoice_item.item.merchant.bulk_discounts
+                                                            .where('quantity <= ?', invoice_item.quantity)
+                                                            .maximum(:percentage)
+                                if max_percentage
+                                  max_percentage * invoice_item.quantity * invoice_item.unit_price
+                                else
+                                  0
+                                end
+                              end
+    (total_revenue - total_discount).round(2)
+  end
+
 end
+

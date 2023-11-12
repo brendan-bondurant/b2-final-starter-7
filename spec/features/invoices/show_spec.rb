@@ -29,7 +29,6 @@ RSpec.describe "invoices show" do
     @invoice_5 = Invoice.create!(customer_id: @customer_4.id, status: 2)
     @invoice_6 = Invoice.create!(customer_id: @customer_5.id, status: 2)
     @invoice_7 = Invoice.create!(customer_id: @customer_6.id, status: 2)
-
     @invoice_8 = Invoice.create!(customer_id: @customer_6.id, status: 1)
 
     @ii_1 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 9, unit_price: 10, status: 2)
@@ -54,6 +53,8 @@ RSpec.describe "invoices show" do
 
     @bulkdiscount1 = @merchant1.bulk_discounts.create!(percentage: 0.10, quantity: 10)
     @bulkdiscount2 = @merchant1.bulk_discounts.create!(percentage: 0.30, quantity: 20)
+    @bulkdiscount3 = @merchant1.bulk_discounts.create!(percentage: 0.17, quantity: 5)
+    @bulkdiscount4 = @merchant1.bulk_discounts.create!(percentage: 0.22, quantity: 19)
   end
 
   it "shows the invoice information" do
@@ -105,9 +106,10 @@ RSpec.describe "invoices show" do
 
   it 'shows total and discounted revenue' do
     visit merchant_invoice_path(@merchant1, @invoice_1)
+
+    discount = ((@ii_11.quantity * @ii_11.unit_price) * @bulkdiscount3.percentage) + ((@ii_1.quantity * @ii_1.unit_price) * @bulkdiscount3.percentage)
     expect(page).to have_content(@invoice_1.total_revenue)
-    expect(page).to have_content(@invoice_1.discounted_revenue)
-  
+    expect(page).to have_content((@invoice_1.total_revenue - discount))
   end
 
 end
