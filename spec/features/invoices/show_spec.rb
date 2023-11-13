@@ -107,7 +107,7 @@ RSpec.describe "invoices show" do
   it 'shows total and discounted revenue' do
     visit merchant_invoice_path(@merchant1, @invoice_1)
 
-    discount = ((@ii_11.quantity * @ii_11.unit_price) * @bulkdiscount3.percentage) + ((@ii_1.quantity * @ii_1.unit_price) * @bulkdiscount3.percentage)
+    discount = ((@ii_11.quantity * @ii_11.unit_price) * @bulkdiscount2.percentage)
     expect(page).to have_content(@invoice_1.total_revenue)
     expect(page).to have_content((@invoice_1.total_revenue - discount))
   end
