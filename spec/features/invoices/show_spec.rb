@@ -29,7 +29,6 @@ RSpec.describe "invoices show" do
     @invoice_5 = Invoice.create!(customer_id: @customer_4.id, status: 2)
     @invoice_6 = Invoice.create!(customer_id: @customer_5.id, status: 2)
     @invoice_7 = Invoice.create!(customer_id: @customer_6.id, status: 2)
-
     @invoice_8 = Invoice.create!(customer_id: @customer_6.id, status: 1)
 
     @ii_1 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 9, unit_price: 10, status: 2)
@@ -51,6 +50,11 @@ RSpec.describe "invoices show" do
     @transaction6 = Transaction.create!(credit_card_number: 879799, result: 0, invoice_id: @invoice_6.id)
     @transaction7 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_7.id)
     @transaction8 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_8.id)
+
+    @bulkdiscount1 = @merchant1.bulk_discounts.create!(percentage: 0.10, quantity: 10)
+    @bulkdiscount2 = @merchant1.bulk_discounts.create!(percentage: 0.30, quantity: 11)
+    @bulkdiscount3 = @merchant1.bulk_discounts.create!(percentage: 0.17, quantity: 12)
+    @bulkdiscount4 = @merchant1.bulk_discounts.create!(percentage: 0.22, quantity: 19)
   end
 
   it "shows the invoice information" do
@@ -100,4 +104,21 @@ RSpec.describe "invoices show" do
     end
   end
 
+  it 'shows total and discounted revenue' do
+    visit merchant_invoice_path(@merchant1, @invoice_1)
+
+    discount = ((@ii_11.quantity * @ii_11.unit_price) * @bulkdiscount2.percentage)
+    expect(page).to have_content(@invoice_1.total_revenue)
+    expect(page).to have_content((@invoice_1.total_revenue - discount))
+  end
+
+  it 'has a link for the bulk discount that was applied, if any' do
+    visit merchant_invoice_path(@merchant1, @invoice_1)
+    expect(page).to have_content(@item_8.name)
+    expect(page).to have_content(@item_1.name)
+    expect(page).to have_link("discount applied to #{@item_8.name}")
+    click_link "discount applied to #{@item_8.name}"
+    expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulkdiscount2))
+    expect(page).to_not have_link("discount applied to #{@item_1.name}")
+  end
 end
