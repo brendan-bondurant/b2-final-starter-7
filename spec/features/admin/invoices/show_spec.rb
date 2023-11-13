@@ -17,6 +17,11 @@ describe "Admin Invoices Index Page" do
     @ii_2 = InvoiceItem.create!(invoice_id: @i1.id, item_id: @item_2.id, quantity: 6, unit_price: 1, status: 1)
     @ii_3 = InvoiceItem.create!(invoice_id: @i2.id, item_id: @item_2.id, quantity: 87, unit_price: 12, status: 2)
 
+    @bd1 = @m1.bulk_discounts.create!(percentage: 0.10, quantity: 10)
+    @bd2 = @m1.bulk_discounts.create!(percentage: 0.30, quantity: 11)
+    @bd3 = @m1.bulk_discounts.create!(percentage: 0.17, quantity: 12)
+    @bd4 = @m1.bulk_discounts.create!(percentage: 0.22, quantity: 19)
+
     visit admin_invoice_path(@i1)
   end
 
@@ -68,5 +73,12 @@ describe "Admin Invoices Index Page" do
       expect(current_path).to eq(admin_invoice_path(@i1))
       expect(@i1.status).to eq("completed")
     end
+  end
+
+  it 'should show the total revenue and the discounted revenue' do
+    save_and_open_page
+    expect(page).to have_content(@i1.total_revenue)
+    expect(page).to have_content(@i1.discounted_revenue)
+  
   end
 end
