@@ -50,12 +50,38 @@ RSpec.describe "bulk discount index" do
   end
 
   describe 'create#discount' do
-    it 'lets you create a new discount' do
+    it 'lets you create a new discount with an integer' do
       expect(page).to have_link("New Discount")
       click_link("New Discount")
       expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant1.id))
 
-      fill_in "bulk_discount[percentage]", with: 0.50
+      fill_in "bulk_discount[percentage]", with: 50
+      fill_in "bulk_discount[quantity]", with: 80
+      click_button "Submit"
+
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1.id))
+      expect(page).to have_content("50%")
+      expect(page).to have_content(80)
+    end
+    it 'lets you create a new discount with a float' do
+      expect(page).to have_link("New Discount")
+      click_link("New Discount")
+      expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant1.id))
+
+      fill_in "bulk_discount[percentage]", with: 50.2
+      fill_in "bulk_discount[quantity]", with: 80
+      click_button "Submit"
+
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1.id))
+      expect(page).to have_content("50%")
+      expect(page).to have_content(80)
+    end
+    it 'lets you create a new discount with a decimal' do
+      expect(page).to have_link("New Discount")
+      click_link("New Discount")
+      expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant1.id))
+
+      fill_in "bulk_discount[percentage]", with: 0.5
       fill_in "bulk_discount[quantity]", with: 80
       click_button "Submit"
 

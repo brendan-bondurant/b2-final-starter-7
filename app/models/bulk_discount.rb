@@ -8,4 +8,11 @@ class BulkDiscount < ApplicationRecord
     percentage = (self.percentage * 100).to_i
   end
 
+  def make_percentage
+    if self.percentage >= 1 
+      self.percentage = (self.percentage / 100.0.round(2))
+    end
+    self.save
+  end
+
 end
