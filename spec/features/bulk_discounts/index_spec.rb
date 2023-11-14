@@ -98,16 +98,18 @@ RSpec.describe "bulk discount index" do
       fill_in "bulk_discount[quantity]", with: 80
       click_button "Submit"
       
-      expect(page).to have_content('Invalid input. Percent should be a number between 0 and 100 and quantity and quantity should be a number')
+      expect(page).to have_content('Invalid input. Percent should be a number between 0 and 100 and quantity should be a number')
       fill_in "bulk_discount[percentage]", with: 50
       fill_in "bulk_discount[quantity]", with: "80 items"
+      click_button "Submit"
       
-      expect(page).to have_content('Invalid input. Percent should be a number between 0 and 100 and quantity and quantity should be a number')
+      expect(page).to have_content('Invalid input. Percent should be a number between 0 and 100 and quantity should be a number')
       fill_in "bulk_discount[percentage]", with: 50
       fill_in "bulk_discount[quantity]", with: 80
       click_button "Submit"
 
       expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1.id))
+      expect(page).to_not have_content('Invalid input. Percent should be a number between 0 and 100 and quantity should be a number')
       expect(page).to have_content("50%")
       expect(page).to have_content(80)
     end

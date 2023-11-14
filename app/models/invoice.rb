@@ -38,6 +38,7 @@ class Invoice < ApplicationRecord
                               .group('invoice_items.id')
                               .sum do |invoice_item_id|
                                 invoice_item = invoice_items.find(invoice_item_id.id)
+                                #why is find faster than find_by_id?
                                 max_percentage = invoice_item.item.merchant.bulk_discounts
                                 .where('quantity <= ?', invoice_item.quantity)
                                 .maximum(:percentage)

@@ -81,8 +81,45 @@ RSpec.describe "bulk discount show" do
       expect(page).to have_content("39%")
       expect(page).to have_content(29)
     end
+
+    it 'allows the discount to be edited with integer' do
+      visit edit_merchant_bulk_discount_path(@merchant1, @bulkdiscount1)
+      
+      expect(find_field("bulk_discount[percentage]").value).to have_content(@bulkdiscount1.percentage)
+      expect(find_field("bulk_discount[quantity]").value).to have_content(@bulkdiscount1.quantity)
+      fill_in "bulk_discount[percentage]", with: 39
+      fill_in "bulk_discount[quantity]", with: 29
+      click_button "Update"
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1))
+      
+      expect(page).to have_content("39%")
+      expect(page).to have_content(29)
+    end
+
+    it 'shows error when edited with string' do
+      visit edit_merchant_bulk_discount_path(@merchant1, @bulkdiscount1)
+      
+      expect(find_field("bulk_discount[percentage]").value).to have_content(@bulkdiscount1.percentage)
+      expect(find_field("bulk_discount[quantity]").value).to have_content(@bulkdiscount1.quantity)
+      fill_in "bulk_discount[percentage]", with: "39%"
+      fill_in "bulk_discount[quantity]", with: 29
+      click_button "Update"
+      
+      expect(page).to have_content('Invalid input. Percent should be a number between 0 and 100 and quantity should be a number')
+      fill_in "bulk_discount[percentage]", with: 39
+      fill_in "bulk_discount[quantity]", with: "29 items"
+      click_button "Update"
+    
+      expect(page).to have_content('Invalid input. Percent should be a number between 0 and 100 and quantity should be a number')
+      fill_in "bulk_discount[percentage]", with: 39
+      fill_in "bulk_discount[quantity]", with: 29
+      click_button "Update"
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1))
+
+      expect(page).to_not have_content('Invalid input. Percent should be a number between 0 and 100 and quantity should be a number')
+      
+      expect(page).to have_content("39%")
+      expect(page).to have_content(29)
+    end
   end
-
-
-
 end
