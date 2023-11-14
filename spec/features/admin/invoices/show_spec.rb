@@ -76,7 +76,7 @@ describe "Admin Invoices Index Page" do
   end
 
   it 'should show the total revenue and the discounted revenue' do
-    save_and_open_page
+
     expect(page).to have_content(@i1.total_revenue)
     expect(page).to have_content(@i1.discounted_revenue)
   
