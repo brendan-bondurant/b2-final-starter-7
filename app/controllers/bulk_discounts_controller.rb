@@ -20,17 +20,25 @@ class BulkDiscountsController < ApplicationController
 
   def update
     discount = BulkDiscount.find(params[:id])
-    #figure out stronger way to do this later
-    discount.update(bulk_discount_params)
-
-    redirect_to merchant_bulk_discounts_path(@merchant.id)
-    
+    if discount.update(bulk_discount_params)
+      discount.make_percentage
+      redirect_to merchant_bulk_discounts_path(@merchant.id)
+    else
+      @discount = @merchant.bulk_discounts.find(params[:id])
+      flash.now[:error] = 'Invalid input. Percent should be a number between 0 and 100 and quantity should be a number'
+      render 'edit'
+    end
   end
 
   def create
-    BulkDiscount.create!(bulk_discount_params.merge(merchant_id: params[:merchant_id])) 
-  
-    redirect_to merchant_bulk_discounts_path(@merchant.id)
+    new_discount = BulkDiscount.new(bulk_discount_params.merge(merchant_id: params[:merchant_id])) 
+    if new_discount.save
+      new_discount.make_percentage
+      redirect_to merchant_bulk_discounts_path(@merchant.id)
+    else
+      flash.now[:error] = 'Invalid input. Percent should be a number between 0 and 100 and quantity should be a number'
+      render 'new'
+    end
   end
 
   def destroy

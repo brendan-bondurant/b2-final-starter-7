@@ -34,10 +34,11 @@ class Invoice < ApplicationRecord
 
   def discounted_revenue
     total_revenue = invoice_items.sum('unit_price * quantity')
-    total_discount = invoice_items.joins(item: { merchant: :bulk_discounts })
+    total_discount = invoice_items.joins( :bulk_discounts )
                               .group('invoice_items.id')
                               .sum do |invoice_item_id|
                                 invoice_item = invoice_items.find(invoice_item_id.id)
+                                #why is find faster than find_by_id?
                                 max_percentage = invoice_item.item.merchant.bulk_discounts
                                 .where('quantity <= ?', invoice_item.quantity)
                                 .maximum(:percentage)

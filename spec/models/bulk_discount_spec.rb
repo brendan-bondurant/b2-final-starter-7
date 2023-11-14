@@ -25,4 +25,14 @@ describe BulkDiscount do
       expect(@bulkdiscount3.percentage_off).to eq(15)
     end
   end
+
+  describe 'make_percentage' do
+    it 'converts integers to decimal' do
+      bd = @merchant2.bulk_discounts.create!(percentage: 30, quantity: 15)
+      expect(bd.percentage).to eq(30)
+      bd.make_percentage
+      expect(bd.percentage).to eq(0.30)
+
+    end
+  end
 end
