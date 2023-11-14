@@ -29,7 +29,6 @@ class BulkDiscountsController < ApplicationController
 
   def create
     new_discount = BulkDiscount.new(bulk_discount_params.merge(merchant_id: params[:merchant_id])) 
-
     if new_discount.save
       new_discount.make_percentage
       redirect_to merchant_bulk_discounts_path(@merchant.id)
