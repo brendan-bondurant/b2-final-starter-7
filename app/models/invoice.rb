@@ -36,11 +36,11 @@ class Invoice < ApplicationRecord
     total_revenue = invoice_items.sum('unit_price * quantity')
     total_discount = invoice_items.joins(item: { merchant: :bulk_discounts })
                               .group('invoice_items.id')
-                              .sum do |invoice_item_id, _|
+                              .sum do |invoice_item_id|
                                 invoice_item = invoice_items.find(invoice_item_id.id)
                                 max_percentage = invoice_item.item.merchant.bulk_discounts
-                                                            .where('quantity <= ?', invoice_item.quantity)
-                                                            .maximum(:percentage)
+                                .where('quantity <= ?', invoice_item.quantity)
+                                .maximum(:percentage)
                                 if max_percentage != nil
                                   max_percentage * invoice_item.quantity * invoice_item.unit_price
                                 else
