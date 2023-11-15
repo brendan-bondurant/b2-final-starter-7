@@ -127,6 +127,13 @@ RSpec.describe "bulk discount index" do
       expect(page).to_not have_content(@bulkdiscount1.percentage_off)
       expect(page).to_not have_content(@bulkdiscount1.quantity)
     end
-  
+  end
+
+  describe 'back to dashboard' do
+    it 'takes you back to the dashboard' do
+      expect(page).to have_link("Back to dashboard")
+      click_link "Back to dashboard"
+      expect(current_path).to eq(merchant_dashboard_index_path(@merchant1.id))
+    end
   end
 end
