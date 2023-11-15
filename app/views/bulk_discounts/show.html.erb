@@ -2,3 +2,5 @@
 <h3>If the customer purchases at least <%= @discount.quantity %> items</h3>
 
 <%= link_to "Change Discount", edit_merchant_bulk_discount_path(@merchant, @discount) %>
+
+<%= link_to "Back to dashboard", merchant_dashboard_index_path(@merchant) %>

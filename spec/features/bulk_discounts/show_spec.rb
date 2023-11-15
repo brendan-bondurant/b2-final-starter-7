@@ -122,4 +122,13 @@ RSpec.describe "bulk discount show" do
       expect(page).to have_content(29)
     end
   end
+  describe 'back to dashboard' do
+    it 'takes you back to the dashboard' do
+      visit merchant_bulk_discount_path(@merchant1, @bulkdiscount2)
+      save_and_open_page
+      expect(page).to have_link("Back to dashboard")
+      click_link "Back to dashboard"
+      expect(current_path).to eq(merchant_dashboard_index_path(@merchant1.id))
+    end
+  end
 end
